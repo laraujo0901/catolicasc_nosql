@@ -50,6 +50,12 @@ module.exports = {
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+    prefix: '/api',
+    proxy: true
+  },
+
+  proxy: {
+    '/api/': process.env.API_URL_BROWSER || `http://localhost:${process.env.PORT || 3000}/`
   },
 
   /*
@@ -60,7 +66,7 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-      
+
     }
   }
 }
