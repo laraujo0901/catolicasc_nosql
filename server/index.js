@@ -11,25 +11,30 @@ const feathers = require('@feathersjs/feathers')
 const configuration = require('@feathersjs/configuration')
 const express = require('@feathersjs/express')
 const middleware = require('./middleware')
-
-console.log('Conectando neo4j...')
-var neo4j = require('neo4j-driver').v1;
-var driver = neo4j.driver(process.env.NEO4JADDR, neo4j.auth.basic(process.env.NEO4JUSER, process.env.NEO4JPASS));
-console.log('Neo4j connected!')
-global.neo4jDriver = driver
+const redisClient = require('feathers-hooks-rediscache').redisClient;
 
 const app = express(feathers())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+app.configure(configuration())
+
+console.log('Conectando neo4j...')
+console.log('Neo4j Connection:', app.get('neo4j_url'), app.get('neo4j_user'), app.get('neo4j_pass'))
+
+var neo4j = require('neo4j-driver').v1;
+var driver = neo4j.driver(app.get('neo4j_url'), neo4j.auth.basic(app.get('neo4j_user'), app.get('neo4j_pass')));
+console.log('Neo4j connected!')
+
+global.neo4jDriver = driver
 
 app
-  .configure(configuration())
   .configure(express.rest())
   .configure(middleware)
+  .configure(redisClient)
   .configure(require('./services'))
 
-const host = app.get('host')
-const port = app.get('port')
+const host = process.env.HOSTNAME || app.get('host')
+const port = process.env.PORT || app.get('port')
 
 process.on('nuxt:build:done', (err) => {
   if (err) {
@@ -37,12 +42,10 @@ process.on('nuxt:build:done', (err) => {
     process.exit(1)
   }
   const server = app.listen(port)
-  server.on('listening', () =>
-    consola.ready({
+  server.on('listening', () => consola.ready({
       message: `Feathers application started on ${host}:${port}`,
       badge: true
-    })
-  )
+    }))
 })
 
 module.exports = app

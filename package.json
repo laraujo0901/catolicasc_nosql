@@ -11,9 +11,11 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@feathersjs/configuration": "^2.0.4",
+    "@feathersjs/feathers": "^3.2.3",
     "@nuxtjs/axios": "^5.0.0",
     "cross-env": "^5.2.0",
-    "feathers": "^2.0.3",
+    "feathers": "^2.0.2",
     "feathers-configuration": "^0.3.3",
     "neo4j-driver": "^1.7.2",
     "nuxt": "^2.0.0",
