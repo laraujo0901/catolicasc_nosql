@@ -1,4 +1,13 @@
 {
-  "host": "with-featherjs-app.feathersjs.com",
-  "port": 80
+  "host": "localhost",
+  "port": "PORT",
+  "redis": {
+    "url": "REDIS_URL"
+  },
+  "redisCache" : {
+    "defaultDuration": 3600
+  },
+  "neo4j_url": "GRAPHENEDB_BOLT_URL",
+  "neo4j_user": "GRAPHENEDB_BOLT_USER",
+  "neo4j_pass": "GRAPHENEDB_BOLT_PASSWORD"
 }
