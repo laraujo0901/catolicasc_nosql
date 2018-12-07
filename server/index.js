@@ -12,20 +12,33 @@ const configuration = require('@feathersjs/configuration')
 const express = require('@feathersjs/express')
 const middleware = require('./middleware')
 const redisClient = require('feathers-hooks-rediscache').redisClient;
+const neo4jfeathers = require('feathers-neo4j-driver')
 
 const app = express(feathers())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
-app.configure(configuration())
+app.configure(configuration());
 
+// Neo4J driver setup
+app.use('neo4jf',neo4jfeathers({
+  uri: app.get('neo4j_uri'),
+  user: app.get('neo4j_user'),
+  pass: app.get('neo4j_pass')
+}));
+/*
 console.log('Conectando neo4j...')
-console.log('Neo4j Connection:', app.get('neo4j_url'), app.get('neo4j_user'), app.get('neo4j_pass'))
+console.log('Neo4j Connection:', app.get('neo4j_url'), 
+                                 app.get('neo4j_user'), 
+                                 app.get('neo4j_pass'))
 
 var neo4j = require('neo4j-driver').v1;
-var driver = neo4j.driver(app.get('neo4j_url'), neo4j.auth.basic(app.get('neo4j_user'), app.get('neo4j_pass')));
+var driver = neo4j.driver(app.get('neo4j_url'), 
+             neo4j.auth.basic(app.get('neo4j_user'), 
+                              app.get('neo4j_pass')));
 console.log('Neo4j connected!')
 
 global.neo4jDriver = driver
+*/
 
 app
   .configure(express.rest())
@@ -43,7 +56,7 @@ process.on('nuxt:build:done', (err) => {
   }
   const server = app.listen(port)
   server.on('listening', () => consola.ready({
-      message: `Feathers application started on ${host}:${port}`,
+      message: `Katecheo application started on ${host}:${port}`,
       badge: true
     }))
 })

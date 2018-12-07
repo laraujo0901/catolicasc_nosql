@@ -1,4 +1,16 @@
 {
   "host": "localhost",
-  "port": 3000
+  "port": 3000,
+  "redis": {
+    "host": "localhost", "port": 6379
+  },
+  "redisCache" : {
+    "defaultDuration": 3600
+  },
+  "mongodb_url": "mongodb://localhost:27017/tomala",
+  "neo4j_url": "bolt://localhost",
+  "neo4j_uri": "http://localhost:7474",
+  "neo4j_user": "neo4j",
+  "neo4j_pass": "teste"
 }
+
