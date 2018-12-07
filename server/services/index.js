@@ -18,5 +18,5 @@ module.exports = function () {
   // app.service('/api/locations').hooks(require('./locations-graph'))
 
   //TODO: incluir hooks para o redis. Mudar o nome do arquivo de hooks.
-  //app.service('/api/catechists').hooks(require('./catechists'))
+  //app.service('/api/catechists').hooks(require('./catechists-hook'))
 }

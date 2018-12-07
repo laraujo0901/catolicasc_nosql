@@ -11,6 +11,6 @@
   "neo4j_url": "bolt://localhost",
   "neo4j_uri": "http://localhost:7474",
   "neo4j_user": "neo4j",
-  "neo4j_pass": "teste"
+  "neo4j_pass": "admin"
 }
 
