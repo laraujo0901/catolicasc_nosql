@@ -1,11 +1,5 @@
 'use strict'
 
-//const neo4jService = require('feathers-neo4j-driver');
-//const neo4j = neo4jService({
-//    uri: 'http://localhost:7474',
-//    user: 'neo4j',
-//    pass: 'teste'
-//});
 var feathersApp = null;
 var neo4j = null;
 
@@ -55,7 +49,7 @@ module.exports = {
     async patch(id, data, params) {},
     async remove(id, params) {},
     setup(app, path) {
-        console.log("Setup de comunidades!");
+        console.log("Iniciando serviço de comunidades!");
         feathersApp = app;
         neo4j = feathersApp.service('neo4jf');
     }

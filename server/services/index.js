@@ -10,12 +10,15 @@ module.exports = function () {
   console.log("Carregando serviços...");
 
   app.use('/api/catechists', require('./catechists'))
-  //app.use('/api/catechizings', require('./catechizings'))
+  app.use('/api/catechizings', require('./catechizings'))
   app.use('/api/groups', require('./groups'))
   app.use('/api/communities', require('./communities'))
 
   // register hooks
-  // app.service('/api/locations').hooks(require('./locations-graph'))
+  app.service('/api/catechists').hooks(require('./response-hook'))
+  app.service('/api/catechizings').hooks(require('./response-hook'))
+  app.service('/api/groups').hooks(require('./response-hook'))
+  app.service('/api/communities').hooks(require('./response-hook'))
 
   //TODO: incluir hooks para o redis. Mudar o nome do arquivo de hooks.
   //app.service('/api/catechists').hooks(require('./catechists-hook'))

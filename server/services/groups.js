@@ -77,6 +77,7 @@ module.exports = {
         return {"return":"OK"};
     },
     setup(app, path) {
+        console.log("Iniciando serviço de grupos!");
         feathersApp = app;
         neo4j = feathersApp.service('neo4jf');
     }

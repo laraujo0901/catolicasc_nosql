@@ -8,7 +8,7 @@ module.exports = {
         //TODO: obter os filtros de params para restringir o 
         //retorno
         return neo4j.create({ 
-            query: 'MATCH (n:catechist) RETURN n;' 
+            query: 'MATCH (n:catechizing) RETURN n;' 
         })
         .then(res => {
             console.log("Resultado:", res);
@@ -17,7 +17,7 @@ module.exports = {
     },
     async get(id, params) {
         return neo4j.create({ 
-            query: 'MATCH (n:catechist {id: {id}} RETURN n);',
+            query: 'MATCH (n:catechizing {id: {id}} RETURN n);',
             params: { id: Number(id) }}
         )
         .then(res => {
@@ -26,13 +26,18 @@ module.exports = {
         });
     },
     async create(data, params) {
-        console.log("Criando catequista...");
+        console.log("Criando catequisando...");
         
-        let query = 'CREATE (n:catechist {' + 
-        ' id:{id},' + 
-        ' name:{name},' + 
-        ' phone:{phone}, ' +
-        ' address:{address}})';
+        let query = 'CREATE (n:catechizing { ' 
+            + 'id:{id},'
+            + 'name:{name},'
+            + 'phone:{phone},'
+            + 'birth_date:{birth_date},'
+            + 'father_name:{father_name},'
+            + 'mother_name:{mother_name},'
+            + 'baptism_date:{mother_name},'
+            + 'eucharist_date:{eucharist_date},'
+            + 'address:{address}})';
         
         return neo4j.create({ 
             query: query, 
@@ -40,6 +45,11 @@ module.exports = {
                 id: Number(data.id),
                 name: data.name,
                 phone: data.phone,
+                birth_date: data.birth_date,
+                father_name: data.father_name,
+                mother_name: data.mother_name,
+                baptism_date: data.mother_name,
+                eucharist_date: data.eucharist_date,
                 address: data.address }
             })
             .then(res => {
@@ -60,7 +70,7 @@ module.exports = {
         },
         setup(app, path) {
             //instantiate neo4j plugin here
-            console.log("Iniciando serviço de catequistas...")
+            console.log("Iniciando serviço de catequisandos...")
             feathersApp = app;
             neo4j = feathersApp.service('neo4jf')
         }
