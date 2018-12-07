@@ -13,6 +13,28 @@
 - Cada catequista também tem um horário de preferência. As turmas geralmente são abertas com base na disponibilidade dos catequistas.
 - As turmas aceitam catequisandos até um limite de 15. Atingindo o limite, o sistema prioriza a sugestão de turmas com menos catequisandos, para uma melhor distribuição dos catequisandos.
 
+## Modelo de dados
+
+Há 4 entidades no sistema:
+- Catequista (catechist)
+- Catequizando (catechizing)
+- Turma (group)
+- Comunidade (community)
+
+Cada entidade tem os seguintes atributos:
+- catechist (id, name, phone, address)
+- catechizing (id, name, phone, birth_date, father_name, mother_name, baptism_date, eucharist_date, address)
+- group (id, begining_time, duration, week_day, type, room)
+- community (id, name, address)
+
+O atributo id, de cada entidade, é um número inteiro sequencial único.
+O atributo week_day tem os seguintes valores: 1 (domingo) a 7 (sabado).
+O atributo type tem os seguntes valores: 1 (eucaristia), 2 (crisma).
+O atributo duration é um inteiro correspondendo aos minutos de duração.
+O atributo begining_time é caracter, com formato "HH:MM".
+Os atributos birth_date, baptism_date e eucharist_date são caracteres, com formato "YYYY-MM-DD".
+Os demais são caracteres de formato livre.
+
 ## Build Setup
 
 ``` bash
