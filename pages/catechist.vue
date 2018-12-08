@@ -127,6 +127,7 @@ export default {
     }
   },
   computed: {
+    
     // current_catechist: function () {
     //   if (!this.current) {
     //     return null
