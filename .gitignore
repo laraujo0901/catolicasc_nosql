@@ -1,5 +1,5 @@
-.nuxt/
-node_modules/.cache/
-node_modules/
-package-lock.json
-package.json
+webapp/.nuxt/
+webapp/node_modules/.cache/
+webapp/node_modules/
+webapp/package-lock.json
+webapp/package.json
