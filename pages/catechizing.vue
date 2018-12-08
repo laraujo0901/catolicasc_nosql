@@ -134,7 +134,7 @@ export default {
       if (!this.current) {
         return null
       }
-      var selected = this.catechizings.filter(i => i.name === this.current)[0]
+      var selected = this.catechizings.filter(i => i.id === this.current)[0]
       return selected
     }
   },
@@ -146,11 +146,12 @@ export default {
       if (this.new_catechizing == undefined
           || this.new_catechizing.name == ''
           || this.new_catechizing.phone == ''
-          || this.new_catechizing.address == ''
-          || this.catechizings.filter(i => i.name === this.new_catechizing.name).length > 0) {
+          || this.new_catechizing.address == '') {
         this.new_catechizing = { name: '', phone: '', address: ''};
         return
       }
+
+      if(!this.new_catechizing.id) this.new_catechizing.id = Math.random();
 
       this.$axios.post('/catechizings', this.new_catechizing)
         .then(result => {
