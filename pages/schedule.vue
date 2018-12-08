@@ -22,11 +22,12 @@
           <v-list-tile 
             v-for="(l, i) in catechists" 
             :key="i"
-            :color="(current == l.name)?'white':' grey'"
-            @click="current = l.name">
+            :color="(current == l._id)?'white':' grey'"
+            @click="current = l._id">
             <v-list-tile-content>
               <span class="heading">{{ l.name }}</span>
               <span class="caption">{{ l.phone }}</span>
+              <span class="caption">{{ (l.groups || []).length }} turma(s)</span>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -81,23 +82,7 @@
 </template>
 <script>
 export default {
-  asyncData(app) {
-    return app.$axios.get('/catechists')
-      .then(response => {
-        console.log("response.data",response.data);
-        return response.data
-      })
-      .catch(error => {
-        console.error(error)
-        return []
-      })
-      .then(records => {
-        var result = {
-          catechists: records
-        }
-        return result
-      })
-  },
+ 
   data () {
     return {
       new_catechist:
@@ -148,9 +133,6 @@ export default {
         })
     }
   },
-  created(){
-    this.catechists = this.updateData();
-  },
   methods: {
     addSchedule () {
       if(!this.current_catechist.schedules) {
@@ -187,13 +169,6 @@ export default {
           this.new_catechist = { name: '', phone: '', address: ''};
         })
         .catch(error => console.error('Erro registrando catequista', error))
-    },
-    updateData(){
-      return this.$axios.get('/catechists')
-      .then(response => {
-        console.log("response.data",response.data);
-        return response.data;
-      });
     }
   }
 }

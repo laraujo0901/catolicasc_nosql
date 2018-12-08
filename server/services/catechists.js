@@ -16,35 +16,45 @@ module.exports = {
         });
     },
     async get(id, params) {
+        console.log("id", id);
+        
         return neo4j.create({ 
-            query: 'MATCH (n:catechist {id: {id}} RETURN n);',
-            params: { id: Number(id) }}
+            query: 'MATCH (n:catechist {id: {id}}) RETURN n;',
+            params: { id: Number(id) }
+        }
         )
         .then(res => {
             console.log("Resultado:", res);
             return res;
+        })
+        .catch(err => {
+            console.log("err", err);
+            return;
         });
     },
     async create(data, params) {
-        console.log("Criando catequista...");
+        console.log("Criando catequista...", data);
         
         let query = 'CREATE (n:catechist {' + 
-        ' id:{id},' + 
+        // ' id:{id},' + 
         ' name:{name},' + 
         ' phone:{phone}, ' +
         ' address:{address}})';
-        
+        //id: Number(data.id),
         return neo4j.create({ 
             query: query, 
             params: { 
-                id: Number(data.id),
                 name: data.name,
                 phone: data.phone,
                 address: data.address }
             })
             .then(res => {
                 return data;
-            });
+            })
+            .catch(err => {
+                console.log("err ==>", err);
+            })
+            ;
         },
         async update(id, data, params) {
             //    return neo4j.create(/*neo4j args here!*/)
