@@ -31,7 +31,7 @@
           label="Endereço"
           v-model="new_catechizing.address"/>
         <v-text-field
-          label="School"
+          label="Escola"
           v-model="new_catechizing.school"/>
         <v-text-field
           label="Turma na escola"
@@ -47,17 +47,26 @@
           <v-list-tile 
             v-for="(l, i) in catechizings" 
             :key="i"
-            :color="(current == l.name)?'blue':' grey'"
+            color="black"
             @click="current = l.name">
             <v-list-tile-content>
               <span class="heading">{{ l.name }}</span>
               <span class="caption">{{ l.phone }}</span>
-              <span class="caption">{{ l.birth_date }}</span>
-              <span class="caption">{{ l.mother_name }}</span>
-              <span class="caption">{{ l.father_name }}</span>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
+        <v-list>
+          <v-list-tile 
+            v-for="(l, i) in classmates" 
+            :key="i"
+            color="black"
+            @click="current = l.name">
+            <v-list-tile-content>
+              <span class="heading">{{ l.name }}</span>
+              <span class="caption">{{ l.phone }}</span>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list> 
       </v-flex>
     </v-layout>
   </v-layout>
@@ -87,14 +96,29 @@ export default {
       {
         name:'',
         phone:'',
+        birth_date:'',
+        baptism_date:'',
+        eucharist_date:'',
         address:'',
+        school:'',
+        school_class:'',
+        mother_name:'',
+        father_name:'',
       },
       current: null,
       catechizings:[ {
         name:'',
         phone:'',
+        birth_date:'',
+        baptism_date:'',
+        eucharist_date:'',
         address:'',
-      }]
+        school:'',
+        school_class:'',
+        mother_name:'',
+        father_name:'',
+      },],
+      classmates:[],
     }
   },
   computed: {
@@ -140,6 +164,12 @@ export default {
       return this.$axios.get('/catechizings')
       .then(response => {
         this.catechizings = response.data;
+      });
+    },
+    getClassMates(){
+      return this.$axios.get('/catechizings', this.current_catechizing.name)
+      .then(response => {
+        this.classmates = response.data;
       });
     }
   }
