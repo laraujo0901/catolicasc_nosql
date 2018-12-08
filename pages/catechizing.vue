@@ -10,38 +10,38 @@
         <span class="title">Catequizando</span>
         <v-text-field
           label="Nome completo"
-          v-model="new_catechizing.name"/>
+          v-model="current_catechizing.name"/>
         <v-text-field
-          v-model="new_catechizing.phone"
+          v-model="current_catechizing.phone"
           label="telefone"
           />
         <v-text-field
           label="Data de nascimento"
           type="date"
-          v-model="new_catechizing.birth_date"/>
+          v-model="current_catechizing.birth_date"/>
         <v-text-field
           label="Data de batismo"
           type="date"
-          v-model="new_catechizing.baptism_date"/>
+          v-model="current_catechizing.baptism_date"/>
         <v-text-field
           label="Data da eucaristia"
           type="date"   
-          v-model="new_catechizing.eucharist_date"/>
+          v-model="current_catechizing.eucharist_date"/>
         <v-text-field
           label="Endereço"
-          v-model="new_catechizing.address"/>
+          v-model="current_catechizing.address"/>
         <v-text-field
           label="Escola"
-          v-model="new_catechizing.school"/>
+          v-model="current_catechizing.school"/>
         <v-text-field
           label="Turma na escola"
-          v-model="new_catechizing.school_class"/>
+          v-model="current_catechizing.school_class"/>
           <v-text-field
           label="Nome completo da mãe"
-          v-model="new_catechizing.mother_name"/> 
+          v-model="current_catechizing.mother_name"/> 
           <v-text-field
           label="Nome completo do pai"
-          v-model="new_catechizing.father_name"
+          v-model="current_catechizing.father_name"
           @keyup.enter="addCatechizing()"/>         
         <v-list>
           <v-list-tile 
@@ -49,7 +49,7 @@
             :key="i"
             color="black"
             @click="current = l.name">
-            <v-list-tile-content>
+            <v-list-tile-content @click="selectCatechizing(l.id)">
               <span class="heading">{{ l.name }}</span>
               <span class="caption">{{ l.phone }}</span>
             </v-list-tile-content>
@@ -92,7 +92,7 @@ export default {
   },
   data () {
     return {
-      new_catechizing:
+      current_catechizing:
       {
         name:'',
         phone:'',
@@ -119,6 +119,7 @@ export default {
         father_name:'',
       },],
       classmates:[],
+      current_catechizing:{}
     }
   },
   computed: {
@@ -130,34 +131,27 @@ export default {
       'sexta-feira',
       'sábado'];
     },
-    current_catechizing: function () {
-      if (!this.current) {
-        return null
-      }
-      var selected = this.catechizings.filter(i => i.id === this.current)[0]
-      return selected
-    }
   },
   created(){
     // this.catechists = this.updateData();
   },
   methods: {
     addCatechizing() {
-      if (this.new_catechizing == undefined
-          || this.new_catechizing.name == ''
-          || this.new_catechizing.phone == ''
-          || this.new_catechizing.address == '') {
-        this.new_catechizing = { name: '', phone: '', address: ''};
+      if (this.current_catechizing == undefined
+          || this.current_catechizing.name == ''
+          || this.current_catechizing.phone == ''
+          || this.current_catechizing.address == '') {
+        this.current_catechizing = { name: '', phone: '', address: ''};
         return
       }
 
-      if(!this.new_catechizing.id) this.new_catechizing.id = Math.random();
+      if(!this.current_catechizing.id) this.current_catechizing.id = Math.random();
 
-      this.$axios.post('/catechizings', this.new_catechizing)
+      this.$axios.post('/catechizings', this.current_catechizing)
         .then(result => {
           console.log('Catequizando registrado:', result.data)
           this.catechizings.push(result.data)
-          this.new_catechizing = { name: '', phone: '', address: ''};
+          this.current_catechizing = { name: '', phone: '', address: ''};
         })
         .catch(error => console.error('Erro registrando catequista', error))
     },
@@ -172,6 +166,11 @@ export default {
       .then(response => {
         this.classmates = response.data;
       });
+    },
+    selectCatechizing(id){
+      var selected = this.catechizings.filter(i => i.id === id)[0]
+      console.log('selected =>', selected);
+      this.current_catechizing = selected;
     }
   }
 }
