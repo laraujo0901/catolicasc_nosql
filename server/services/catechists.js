@@ -35,7 +35,7 @@ module.exports = {
         console.log("Criando catequista...", data);
         
         let query_cat = 'CREATE (n:catechist {'
-            // + ' id:{cat_id},' 
+            + ' id:{cat_id},' 
             + ' name:{name},' 
             + ' phone:{phone}, ' 
             + ' address:{address}})';        

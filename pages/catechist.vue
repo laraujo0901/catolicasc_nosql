@@ -24,7 +24,7 @@
             :key="i"
             color="black"
             @click="current = l.name">
-            <v-list-tile-content @click="selectCatechist(l.name)">
+            <v-list-tile-content @click="selectCatechist(l.id)">
               <span class="heading">{{ l.name }}</span>
               <span class="caption">{{ l.phone }}</span>
             </v-list-tile-content>
@@ -127,14 +127,6 @@ export default {
     }
   },
   computed: {
-    
-    // current_catechist: function () {
-    //   if (!this.current) {
-    //     return null
-    //   }
-    //   var selected = this.catechists.filter(i => i._id === this.current)[0]
-    //   return selected
-    // },
     current_schedules: function () {
       if (!this.current_catechist || !this.current_catechist.preferred_schedules) {
         return []
@@ -157,7 +149,7 @@ export default {
       if(!this.current_catechist.preferred_schedules) {
         this.current_catechist.preferred_schedules = []
       }
-      // var targetId = this.catechists.filter(l => l.name === this.current_catechist.name)[0]._id
+      // var targetId = this.catechists.filter(l => l.id === this.current_catechist.id)[0].id
       this.current_catechist.preferred_schedules.push({
         week_day: this.available_targets.indexOf(this.new_schedule.week_day),
         begining_time: this.new_schedule.begining_time
@@ -174,11 +166,12 @@ export default {
       if (this.current_catechist == undefined
           || this.current_catechist.name == ''
           || this.current_catechist.phone == ''
-          || this.current_catechist.address == ''
-          || this.catechists.filter(i => i.name === this.current_catechist.name).length > 0) {
+          || this.current_catechist.address == '') {
         this.current_catechist = { name: '', phone: '', address: ''};
         return
       }
+
+      if(!this.current_catechist.id) this.current_catechist.id = Math.random();
 
       this.$axios.post('/catechists', this.current_catechist)
         .then(result => {
@@ -194,8 +187,8 @@ export default {
         this.catechists = response.data;
       });
     },
-    selectCatechist(name){
-      var selected = this.catechists.filter(i => i.name === name)[0]
+    selectCatechist(id){
+      var selected = this.catechists.filter(i => i.id === id)[0]
       console.log('selected =>', selected);
       this.current_catechist = selected;
     }
