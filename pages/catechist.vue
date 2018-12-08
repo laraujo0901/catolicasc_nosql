@@ -9,21 +9,24 @@
         ma-1>
         <span class="title">Catequistas</span>
         <v-text-field
-          v-model="new_catechist.name"/>
+          label="Nome completo"
+          v-model="current_catechist.name"/>
         <v-text-field
-          v-model="new_catechist.phone"
-          label="Adicionar"
+          label="Endereço"
+          v-model="current_catechist.address"/>
+        <v-text-field
+          v-model="current_catechist.phone"
+          label="telefone"
           @keyup.enter="addCatechist()"/>
         <v-list>
           <v-list-tile 
             v-for="(l, i) in catechists" 
             :key="i"
-            :color="(current == l._id)?'white':' grey'"
-            @click="current = l._id">
-            <v-list-tile-content>
+            color="black"
+            @click="current = l.name">
+            <v-list-tile-content @click="selectCatechist(l.id)">
               <span class="heading">{{ l.name }}</span>
               <span class="caption">{{ l.phone }}</span>
-              <span class="caption">{{ (l.groups || []).length }} turma(s)</span>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -42,7 +45,7 @@
             xs8
             pr-1>
             <v-select
-              v-model="new_schedule.day"
+              v-model="new_schedule.week_day"
               :items="available_targets"
               label="Dia da semana" />
           </v-flex>
@@ -50,8 +53,8 @@
             xs2 
             pl-1>
             <v-text-field 
-              v-model="new_schedule.time"
-              type="datetime"
+              v-model="new_schedule.begining_time"
+              type="time"
               label="Horário" />          
           </v-flex>
           <v-flex 
@@ -65,10 +68,9 @@
           <v-list-tile 
             v-for="(r, i) in current_schedules" 
             :key="i">
-            <v-list-tile-content>
-              <span class="heading">{{ r.catechist.name }}</span>
-              <span class="caption">{{ r.day }}</span>
-              <span class="caption">{{ r.time }}</span>
+            <v-list-tile-content >
+              <span class="caption">{{ r.week_day_show }}</span>
+              <span class="caption">{{ r.begining_time }}</span>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -79,8 +81,9 @@
 <script>
 export default {
   asyncData(app) {
-    return app.$axios.get('/locations')
+    return app.$axios.get('/catechists')
       .then(response => {
+        console.log("response.data",response.data);
         return response.data
       })
       .catch(error => {
@@ -89,90 +92,105 @@ export default {
       })
       .then(records => {
         var result = {
-          locations: records
+          catechists: records
         }
         return result
       })
   },
   data () {
     return {
-      new_catechist:
+      current_catechist:
       {
         name:'',
         phone:'',
+        address:'',
       },
       new_schedule:{
         day:'',
         time:'',
       },
-      current: null,
-    }
-  },
-  computed: {
-    available_targets: function () {
-      return [ 'segunda-feira',
+      current_schedule:{
+        day:'',
+        time:'',
+      },
+      catechists:[ {
+        name:'',
+        phone:'',
+        address:'',
+      }],
+      available_targets: [ 'segunda-feira',
       'terça-feira',
       'quarta-feira',
       'quinta-feira',
       'sexta-feira',
-      'sábado'];
-    },
-    current_catechist: function () {
-      if (!this.current) {
-        return null
-      }
-      var selected = this.catechists.filter(i => i._id === this.current)[0]
-      return selected
-    },
+      'sábado'],
+    }
+  },
+  computed: {
     current_schedules: function () {
-      if (!this.current_catechist || !this.current_catechist.schedules) {
+      if (!this.current_catechist || !this.current_catechist.preferred_schedules) {
         return []
       }
 
-      var r = this.current_catechist.schedules || []
-      return r.map(r => {
-          return {
-            catechist: this.catechists.filter(l => l._id === r.target)[0],
-            schedule: this.current_catechist.schedules[r]
-          }
-        })
+      return this.current_catechist.preferred_schedules.map( i => {
+        return {
+          week_day: i.week_day,
+          begining_time: i.begining_time,
+          week_day_show: this.available_targets[i.week_day]
+        }
+      });
     }
+  },
+  created(){
+    // this.catechists = this.updateData();
   },
   methods: {
     addSchedule () {
-      if(!this.current_catechist.schedules) {
-        this.current_catechist.schedules = []
+      if(!this.current_catechist.preferred_schedules) {
+        this.current_catechist.preferred_schedules = []
       }
-      var targetId = this.catechists.filter(l => l.name === this.new_catechist.name)[0]._id
-      this.current_catechist.schedules.push({
-        target: targetId,
-        day: parseInt(this.new_schedule.day),
-        time: parseInt(this.new_schedule.time)
+      // var targetId = this.catechists.filter(l => l.id === this.current_catechist.id)[0].id
+      this.current_catechist.preferred_schedules.push({
+        week_day: this.available_targets.indexOf(this.new_schedule.week_day),
+        begining_time: this.new_schedule.begining_time
       })
       this.$axios.put('/catechists/' + this.current_catechist._id, this.current_catechist)
         .then(result => {
           var idx = this.catechists.indexOf(this.current_catechist) 
           this.catechists[idx] = result.data
-          this.new_catechist = { name: '', phone: ''}
+          this.current_catechist = { name: '', phone: ''}
         })
         .catch(error => console.error('Erro criando catequista:', error))
     },
     addCatechist () {
-      if (this.new_catechist == undefined
-          || this.new_catechist.name == ''
-          || this.new_catechist.phone == ''
-          || this.catechists.filter(i => i.name === this.new_catechist.name).length > 0) {
-        this.new_catechist = { name: '', phone: '', };
+      if (this.current_catechist == undefined
+          || this.current_catechist.name == ''
+          || this.current_catechist.phone == ''
+          || this.current_catechist.address == '') {
+        this.current_catechist = { name: '', phone: '', address: ''};
         return
       }
 
-      this.$axios.post('/catechists', this.new_catechist)
+      if(!this.current_catechist.id) this.current_catechist.id = Math.random();
+
+      this.$axios.post('/catechists', this.current_catechist)
         .then(result => {
           console.log('Catequista registrado:', result.data)
           this.catechists.push(result.data)
-          this.new_catechist = { name: '', phone: '', };
+          this.current_catechist = { name: '', phone: '', address: ''};
         })
         .catch(error => console.error('Erro registrando catequista', error))
+    },
+    updateData(){
+      return this.$axios.get('/catechists')
+      .then(response => {
+        this.catechists = response.data;
+      });
+    },
+    selectCatechist(id){
+      var selected = this.catechists.filter(i => i.id === id)[0]
+      console.log('selected =>', selected);
+      this.current_catechist = selected;
     }
   }
 }

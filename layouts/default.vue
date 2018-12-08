@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
       :mini-variant="miniVariant"
       :clipped="clipped"
@@ -49,6 +49,7 @@
         <v-icon>remove</v-icon>
       </v-btn>
       <v-toolbar-title v-text="title"/>
+      <v-spacer />
       <v-btn
         icon
         @click.stop="rightDrawer = !rightDrawer"
@@ -93,13 +94,14 @@
         drawer: true,
         fixed: false,
         items: [
-          { icon: 'apps', title: 'Welcome', to: '/' },
-          { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+          { icon: 'apps', title: 'Início', to: '/' },
+          { icon: 'people', title: 'Catequistas', to: '/catechist' },
+          { icon: 'person', title: 'Catequizandos', to: '/catechizing' },
         ],
         miniVariant: false,
         right: true,
         rightDrawer: false,
-        title: 'Vuetify.js'
+        title: 'Katecheo'
       }
     }
   }

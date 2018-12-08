@@ -16,6 +16,8 @@ module.exports = {
         });
     },
     async get(id, params) {
+        console.log("id", id);
+        
         return neo4j.create({ 
             query: 'MATCH (n:catechist {id: {id}}) RETURN n;',
             params: { id: Number(id) }}
@@ -23,10 +25,14 @@ module.exports = {
         .then(res => {
             console.log("Resultado:", res);
             return res;
+        })
+        .catch(err => {
+            console.log("err", err);
+            return;
         });
     },
     async create(data, params) {
-        console.log("Criando catequista...");
+        console.log("Criando catequista...", data);
         
         let query_cat = 'CREATE (n:catechist {'
             + ' id:{cat_id},' 
