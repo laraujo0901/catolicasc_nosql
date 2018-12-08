@@ -95,7 +95,8 @@
         fixed: false,
         items: [
           { icon: 'apps', title: 'Início', to: '/' },
-          { icon: 'person', title: 'Catequistas', to: '/catechist' },
+          { icon: 'people', title: 'Catequistas', to: '/catechist' },
+          { icon: 'person', title: 'Catequizandos', to: '/catechizing' },
         ],
         miniVariant: false,
         right: true,

@@ -22,7 +22,7 @@
           <v-list-tile 
             v-for="(l, i) in catechists" 
             :key="i"
-            :color="(current == l.name)?'white':' grey'"
+            :color="(current == l.name)?'blue':' grey'"
             @click="current = l.name">
             <v-list-tile-content>
               <span class="heading">{{ l.name }}</span>
@@ -115,7 +115,11 @@ export default {
         day:'',
         time:'',
       },
-      catechists:[]
+      catechists:[ {
+        name:'',
+        phone:'',
+        address:'',
+      }]
     }
   },
   computed: {
@@ -149,7 +153,7 @@ export default {
     }
   },
   created(){
-    this.catechists = this.updateData();
+    // this.catechists = this.updateData();
   },
   methods: {
     addSchedule () {
@@ -191,8 +195,7 @@ export default {
     updateData(){
       return this.$axios.get('/catechists')
       .then(response => {
-        console.log("response.data",response.data);
-        return response.data;
+        this.catechists = response.data;
       });
     }
   }
