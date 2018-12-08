@@ -80,8 +80,8 @@ module.exports = {
                 id_list: id_list
             };
 
-            console.log(query_prefer);
-            console.log(params_prefer);
+            //console.log(query_prefer);
+            //console.log(params_prefer);
         }
 
         let restr_scheds = [];
@@ -109,12 +109,12 @@ module.exports = {
                 id_list: id_list
             };
 
-            console.log(query_restr);
-            console.log(params_restr);
+            //console.log(query_restr);
+            //console.log(params_restr);
         }
 
-        console.log(pref_scheds);
-        console.log(restr_scheds);        
+        //console.log(pref_scheds);
+        //console.log(restr_scheds);        
         
         let params_sched = {};
         let query_sched = null;
@@ -161,8 +161,8 @@ module.exports = {
             });
         }
 
-        console.log(query_sched);
-        console.log(params_sched);
+        //console.log(query_sched);
+        //console.log(params_sched);
 
         if (query_sched) {
             db_queries.push({
@@ -184,7 +184,7 @@ module.exports = {
             }
         }
 
-        console.log(db_queries);
+        //console.log(db_queries);
 
         return neo4j.create(db_queries)
         .then(res => {

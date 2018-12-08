@@ -5,10 +5,19 @@ var neo4j = null;
 
 module.exports = {
     async find(params) {
-        //TODO: obter os filtros de params para restringir o 
-        //retorno
+        var query = 'MATCH (n:catechizing)'
+        
+        if (params && params.query.school) {
+            query += '-[:has]->(s:schoolclass) WHERE s.school = "' 
+                  + params.query.school + '"';
+        }
+
+        query += ' RETURN n;'
+
+        console.log(query);
+
         return neo4j.create({ 
-            query: 'MATCH (n:catechizing) RETURN n;' 
+            query: query
         })
         .then(res => {
             console.log("Resultado:", res);
@@ -28,17 +37,26 @@ module.exports = {
     async create(data, params) {
         console.log("Criando catequisando...");
         
-        let query = 'CREATE (n:catechizing { ' 
+        let query = 'CREATE (n:catechizing {' 
             + 'id:{id},'
             + 'name:{name},'
             + 'phone:{phone},'
             + 'birth_date:{birth_date},'
             + 'father_name:{father_name},'
             + 'mother_name:{mother_name},'
-            + 'baptism_date:{mother_name},'
+            + 'baptism_date:{baptism_date},'
             + 'eucharist_date:{eucharist_date},'
-            + 'address:{address}})';
+            + 'address:{address}'
+            + '})'
+            + ' MERGE (s:schoolclass {'
+            + 'school:{school},'
+            + 'school_class:{school_class}'
+            + '})'
+            + ' CREATE (n)-[:has]->(s)';
         
+        console.log(query);
+        console.log(data);
+
         return neo4j.create({ 
             query: query, 
             params: { 
@@ -48,9 +66,11 @@ module.exports = {
                 birth_date: data.birth_date,
                 father_name: data.father_name,
                 mother_name: data.mother_name,
-                baptism_date: data.mother_name,
+                baptism_date: data.baptism_date,
                 eucharist_date: data.eucharist_date,
-                address: data.address }
+                address: data.address,
+                school: data.school,
+                school_class: data.school_class }
             })
             .then(res => {
                 return data;
