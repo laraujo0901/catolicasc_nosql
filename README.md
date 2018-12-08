@@ -22,8 +22,8 @@ Há 4 entidades no sistema:
 - Comunidade (community)
 
 Cada entidade tem os seguintes atributos:
-- catechist (id, name, phone, address)
-- catechizing (id, name, phone, birth_date, father_name, mother_name, baptism_date, eucharist_date, address)
+- catechist (id, name, phone, address, preferred_schedules, restricted_schedules)
+- catechizing (id, name, phone, birth_date, father_name, mother_name, baptism_date, eucharist_date, address, school, school_class, preferred_schedules, restricted_schedules)
 - group (id, begining_time, duration, week_day, type, room)
 - community (id, name, address)
 
@@ -33,6 +33,7 @@ O atributo type tem os seguntes valores: 1 (eucaristia), 2 (crisma).
 O atributo duration é um inteiro correspondendo aos minutos de duração.
 O atributo begining_time é caracter, com formato "HH:MM".
 Os atributos birth_date, baptism_date e eucharist_date são caracteres, com formato "YYYY-MM-DD".
+Os atributos preferred_schedules e restricted_schedules são compostos de um ou mais objetos com os atributos week_day e begining_time.
 Os demais são caracteres de formato livre.
 
 ## Build Setup

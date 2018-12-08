@@ -1,13 +1,57 @@
 Catechist
-{"id":"1","name":"Aluisio Josias","phone":"35789654","address":"Rua Campina Grande, 1254"}
+{
+    "id":"1",
+    "name":"Aluisio Josias",
+    "phone":"35789654",
+    "address":"Rua Campina Grande, 1254",
+    "preferred_schedules": [{
+        "week_day": 1,
+        "begining_time": "19:00"
+    }],
+    "restricted_schedules": [{
+        "week_day": 2,
+        "begining_time": "09:00"
+    }]
+}
+
+Catechizing
+{
+    "id": 1,
+    "name":"Sandro Roberto",
+    "phone":"999996658",
+    "birth_date":"2005-10-21",
+    "father_name":"Paulo Roberto",
+    "mother_name":"",
+    "baptism_date":"",
+    "eucharist_date":"",
+    "address":"",
+    "school":"",
+    "school_class":"",
+    "preferred_schedules": [
+        {
+            "week_day": 3, "begining_time": "09:00"
+        }
+    ],
+    "restricted_schedules": [],
+    "friends": [1,2,3]
+}
 
 Group
-{"id":"1","begining_time":"19:00","duration":"60","week_day":2,"type":1,"room":"B"}
+{
+    "id":"1",
+    "begining_time":"19:00",
+    "duration":"60",
+    "week_day":2,
+    "type":1,
+    "room":"B"
+}
+
 week_day: 1 (dom), 2 (seg), 3 (ter), 4 (qua), 5 (qui), 6 (sex), 7 (sab)
 type: 1 (eucaristia), 2 (crisma)
 
-Catechizing
-{"id":"1","name":"Sandro Roberto","phone":"999996658","birth_date":"2005-10-21","father_name":"Paulo Roberto","mother_name":"","baptism_date":"","eucharist_date":"","address":""}
-
 Community
-{"id":"1","name":"São Francisco de Assis","address":"Rua Ademar Garcia, 3343"}
+{
+    "id":"1",
+    "name":"São Francisco de Assis",
+    "address":"Rua Ademar Garcia, 3343"
+}
