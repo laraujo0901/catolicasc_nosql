@@ -17,7 +17,7 @@ module.exports = {
     },
     async get(id, params) {
         return neo4j.create({ 
-            query: 'MATCH (n:catechizing {id: {id}} RETURN n);',
+            query: 'MATCH (n:catechizing {id: {id}}) RETURN n;',
             params: { id: Number(id) }}
         )
         .then(res => {
