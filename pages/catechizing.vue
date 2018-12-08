@@ -162,8 +162,9 @@ export default {
       });
     },
     getClassMates(){
-      return this.$axios.get('/catechizings', this.current_catechizing.name)
+      return this.$axios.get('/catechizings', this.current_catechizing.id)
       .then(response => {
+        console.log("classmates => ", response.data)
         this.classmates = response.data;
       });
     },
@@ -171,6 +172,7 @@ export default {
       var selected = this.catechizings.filter(i => i.id === id)[0]
       console.log('selected =>', selected);
       this.current_catechizing = selected;
+      this.getClassMates();
     }
   }
 }

@@ -21,9 +21,9 @@ app.configure(configuration());
 
 // Neo4J driver setup
 app.use('neo4jf',neo4jfeathers({
-  uri: app.get('neo4j_uri'),
-  user: app.get('neo4j_user'),
-  pass: app.get('neo4j_pass')
+  uri: process.env.neo4j_uri || app.get('neo4j_uri'),
+  user: process.env.neo4j_user || app.get('neo4j_user'),
+  pass: process.env.neo4j_pass || app.get('neo4j_pass')
 }));
 /*
 console.log('Conectando neo4j...')
