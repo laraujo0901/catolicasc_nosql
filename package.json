@@ -12,11 +12,14 @@
   },
   "dependencies": {
     "@feathersjs/configuration": "^2.0.4",
+    "@feathersjs/express": "^1.2.7",
     "@feathersjs/feathers": "^3.2.3",
+    "@feathersjs/rest-client": "^1.4.5",
     "@nuxtjs/axios": "^5.0.0",
     "cross-env": "^5.2.0",
-    "feathers": "^2.0.2",
-    "feathers-configuration": "^0.3.3",
+    "event-stream": "^4.0.1",
+    "feathers-hooks-rediscache": "^1.1.4",
+    "feathers-neo4j-driver": "^1.1.1",
     "neo4j-driver": "^1.7.2",
     "nuxt": "^2.0.0",
     "vuetify": "^1.2.4"
