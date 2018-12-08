@@ -33,7 +33,7 @@ module.exports = {
             + ' name:{name},' 
             + ' phone:{phone}, ' 
             + ' address:{address}})';        
-
+            
         // Separando o objeto em vários objetos
         let params_cat = {
             cat_id: data.id,
@@ -41,7 +41,18 @@ module.exports = {
             phone: data.phone,
             address: data.address
         }
-
+        
+        let db_queries = [];
+        let query_prefer = null;
+        let params_prefer = null;
+        let query_restr = null;
+        let params_restr = null;
+    
+        db_queries.push({
+            query: query_cat,
+            params: params_cat
+        });
+            
         let sched_id = data.id + 1;
 
         let pref_scheds = [];
@@ -53,6 +64,24 @@ module.exports = {
                     begining_time: element.begining_time
                 });
             });
+
+            let id_list = pref_scheds.map(elem => {
+                return elem.id;
+            });
+            
+            // Relacionar estes horarios ao catequista
+            // (cat)-[:prefer]->(sch)
+            query_prefer = 'match (cat:catechist),(sch:schedule)' 
+                + ' where cat.id={cat_id} and sch.id in {id_list}'
+                + ' create (cat)-[:prefer]->(sch) return (cat),(sch)';
+
+            params_prefer = {
+                cat_id: data.id,
+                id_list: id_list
+            };
+
+            console.log(query_prefer);
+            console.log(params_prefer);
         }
 
         let restr_scheds = [];
@@ -64,59 +93,98 @@ module.exports = {
                     begining_time: element.begining_time
                 });
             });
-        }
-        console.log(pref_scheds);
-        console.log(restr_scheds);
-        
-        let db_queries = [];
 
-        db_queries.push({
-            query: query_cat,
-            params: params_cat
-        });
+            let id_list = restr_scheds.map(elem => {
+                return elem.id;
+            });
+            
+            // Relacionar estes horarios ao catequista
+            // (cat)-[:restrict]->(sch)
+            query_restr = 'match (cat:catechist),(sch:schedule)' 
+                + ' where cat.id={cat_id} and sch.id in {id_list}'
+                + ' create (cat)-[:restrict]->(sch) return (cat),(sch)';
+
+            params_restr = {
+                cat_id: data.id,
+                id_list: id_list
+            };
+
+            console.log(query_restr);
+            console.log(params_restr);
+        }
+
+        console.log(pref_scheds);
+        console.log(restr_scheds);        
         
         let params_sched = {};
-        let query_sched = 'CREATE ';
+        let query_sched = null;
+        let j = 0;
+        let str_j = "";
 
         if (pref_scheds.length > 0) {
+            query_sched = 'CREATE ';
             pref_scheds.forEach(function(value, i){
-                if (i > 0) query_sched = query_sched + ',';
+                if (i > 0) query_sched += ',';
                 
-                query_sched = query_sched + '(n' + String(i) + ':schedule {'
-                + ' id: {sched_id_' + String(i) + ' },'
-                + ' week_day: {week_day_' + String(i) + '},'
-                + ' begining_time: {begining_time_' + String(i) + '}})'
-                ;
+                str_j = String(j++);
+
+                query_sched += '(n' + str_j + ':schedule {'
+                    + ' id: {sched_id_' + str_j + ' },'
+                    + ' week_day: {week_day_' + str_j + '},'
+                    + ' begining_time: {begining_time_' + str_j + '}})';
     
-                params_sched["sched_id_" + String(i)] = value.id;
-                params_sched['week_day_' + String(i)] = value.week_day;
-                params_sched['begining_time_' + String(i)] = value.begining_time;
+                params_sched["sched_id_" + str_j] = value.id;
+                params_sched['week_day_' + str_j] = value.week_day;
+                params_sched['begining_time_' + str_j] = value.begining_time;
             });
         }
 
         if (restr_scheds.length > 0) {
+            if (!query_sched) { 
+                query_sched = 'CREATE ';
+            } else {
+                query_sched += ',';
+            }
             restr_scheds.forEach(function(value, i){
-                if (i > 0) query_sched = query_sched + ',';
+                if (i > 0) query_sched += ',';
                 
-                query_sched = query_sched + '(n' + String(i) + ':schedule {'
-                + ' id: {sched_id_' + String(i) + ' },'
-                + ' week_day: {week_day_' + String(i) + '},'
-                + ' begining_time: {begining_time_' + String(i) + '}})'
-                ;
+                str_j = String(j++);
+
+                query_sched += '(n' + str_j + ':schedule {'
+                    + ' id: {sched_id_' + str_j + ' },'
+                    + ' week_day: {week_day_' + str_j + '},'
+                    + ' begining_time: {begining_time_' + str_j + '}})';
     
-                params_sched["sched_id_" + String(i)] = value.id;
-                params_sched['week_day_' + String(i)] = value.week_day;
-                params_sched['begining_time_' + String(i)] = value.begining_time;
+                params_sched["sched_id_" + str_j] = value.id;
+                params_sched['week_day_' + str_j] = value.week_day;
+                params_sched['begining_time_' + str_j] = value.begining_time;
             });
         }
 
         console.log(query_sched);
         console.log(params_sched);
 
-        db_queries.push({
-            query: query_sched,
-            params: params_sched
-        });
+        if (query_sched) {
+            db_queries.push({
+                query: query_sched,
+                params: params_sched
+            });
+
+            if (query_prefer) {
+                db_queries.push({
+                    query: query_prefer,
+                    params: params_prefer
+                });
+            }
+            if (query_restr) {
+                db_queries.push({
+                    query: query_restr,
+                    params: params_restr
+                });
+            }
+        }
+
+        console.log(db_queries);
 
         return neo4j.create(db_queries)
         .then(res => {
