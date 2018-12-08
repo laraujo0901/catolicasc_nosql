@@ -16,7 +16,7 @@ module.exports = function () {
 
   // register hooks
   app.service('/api/catechists').hooks(require('./response-hook'))
-  app.service('/api/catechizings').hooks(require('./response-hook'))
+  app.service('/api/catechizings').hooks(require('./catechizing-hook'))
   app.service('/api/groups').hooks(require('./response-hook'))
   app.service('/api/communities').hooks(require('./response-hook'))
 

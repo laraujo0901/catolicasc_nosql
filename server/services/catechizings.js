@@ -5,14 +5,14 @@ var neo4j = null;
 
 module.exports = {
     async find(params) {
-        var query = 'MATCH (n:catechizing)'
+        var query = 'MATCH (n:catechizing)-[:has]->(s:schoolclass)'
         
         if (params && params.query.school) {
-            query += '-[:has]->(s:schoolclass) WHERE s.school = "' 
+            query += ' WHERE s.school = "' 
                   + params.query.school + '"';
         }
 
-        query += ' RETURN n;'
+        query += ' RETURN n,s;'
 
         console.log(query);
 
@@ -25,8 +25,11 @@ module.exports = {
         });
     },
     async get(id, params) {
+        var query = 'MATCH (n:catechizing)-[:has]->(s:schoolclass)'
+                  + ' WHERE n.id = {id}'
+                  + ' RETURN n,s;';
         return neo4j.create({ 
-            query: 'MATCH (n:catechizing {id: {id}}) RETURN n;',
+            query: query,
             params: { id: Number(id) }}
         )
         .then(res => {
